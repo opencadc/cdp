@@ -128,7 +128,7 @@ public class DelegationActionFactory
 
     private CertificateDAO getDAO()
     {
-        CertificateDAO.CertificateSchema config = new CertificateDAO.CertificateSchema(dataSource, catalog, schema);
+        CertificateDAO.CertificateSchema config = new CertificateDAO.CertificateSchema(dataSource, catalog);
         return new CertificateDAO(config);
     }
     
