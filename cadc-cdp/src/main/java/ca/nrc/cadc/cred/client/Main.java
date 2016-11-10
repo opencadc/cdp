@@ -82,6 +82,8 @@ import ca.nrc.cadc.auth.CertCmdArgUtil;
 import ca.nrc.cadc.auth.HttpPrincipal;
 import ca.nrc.cadc.auth.X509CertificateChain;
 import ca.nrc.cadc.cred.CertUtil;
+import ca.nrc.cadc.reg.Standards;
+import ca.nrc.cadc.reg.client.LocalAuthority;
 import ca.nrc.cadc.reg.client.RegistryClient;
 import ca.nrc.cadc.util.ArgumentMap;
 import ca.nrc.cadc.util.Log4jInit;
@@ -140,7 +142,15 @@ public class Main implements PrivilegedAction<Boolean>
     
     private Operation operation; // current operation on Cred client
 
-    public static final String SERVICE_ID = "ivo://cadc.nrc.ca/cred";
+    //public static final String SERVICE_ID = "ivo://cadc.nrc.ca/cred";
+    public static String SERVICE_ID;
+
+    public Main() {
+        LocalAuthority localAuthority = new LocalAuthority();       
+        URI serviceURI = localAuthority.getServiceURI(Standards.CRED_DELEGATE_10.toString());
+        SERVICE_ID = serviceURI.toString();
+        
+    }
 
     /**
      * Main class for accessing CDP
@@ -149,6 +159,10 @@ public class Main implements PrivilegedAction<Boolean>
      */
     public static void main(String[] args)
     {
+        LocalAuthority localAuthority = new LocalAuthority();       
+        URI serviceURI = localAuthority.getServiceURI(Standards.CRED_DELEGATE_10.toString());
+        SERVICE_ID = serviceURI.toString();
+
         ArgumentMap argMap = new ArgumentMap(args);
 
         if (argMap.isSet(ARG_HELP) || argMap.isSet(ARG_H))
