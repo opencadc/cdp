@@ -119,10 +119,12 @@ public class CertificateDAO
 
         private final String certTable;
         
-        public CertificateSchema(String dataSourceName, String catalog, String schema)
+        //public CertificateSchema(String dataSourceName, String catalog, String schema)
+        public CertificateSchema(String dataSourceName, String catalog)
         {
             this.dataSourceName = dataSourceName;
-            this.certTable = catalog + "." + schema + "." + table;
+            //this.certTable = catalog + "." + schema + "." + table;
+            this.certTable = catalog + "." + table;
         }
         
         public String getTable()

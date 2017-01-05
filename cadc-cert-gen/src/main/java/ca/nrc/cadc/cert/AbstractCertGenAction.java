@@ -35,6 +35,8 @@
 package ca.nrc.cadc.cert;
 
 import ca.nrc.cadc.auth.HttpPrincipal;
+import ca.nrc.cadc.reg.Standards;
+import ca.nrc.cadc.reg.client.LocalAuthority;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -46,6 +48,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import ca.nrc.cadc.util.ArgumentMap;
 import ca.nrc.cadc.util.StringUtil;
+
 import javax.security.auth.x500.X500Principal;
 
 
@@ -54,13 +57,23 @@ public abstract class AbstractCertGenAction implements PrivilegedAction<Object>
 {
     private static Logger LOGGER = Logger.getLogger(AbstractCertGenAction.class);
 
-    public static final URI CRED_SERVICE_ID = URI.create("ivo://cadc.nrc.ca/cred");
-
+    //public static final URI CRED_SERVICE_ID = URI.create("ivo://cadc.nrc.ca/cred");
+    public static URI CRED_SERVICE_ID;
+    
     protected int expiring;
     protected String userid;
 
+    public AbstractCertGenAction() {
+        
+        LocalAuthority localAuthority = new LocalAuthority();       
+        CRED_SERVICE_ID = localAuthority.getServiceURI(Standards.CRED_DELEGATE_10.toString());
+           
+    }
+    
     public boolean init(final ArgumentMap argMap) throws IOException
     {
+        LocalAuthority localAuthority = new LocalAuthority();       
+        CRED_SERVICE_ID = localAuthority.getServiceURI(Standards.CRED_DELEGATE_10.toString());
 
         String expiringString = argMap.getValue(Main.ARG_EXPIRING);
         String userIDString = argMap.getValue(Main.ARG_USERID);

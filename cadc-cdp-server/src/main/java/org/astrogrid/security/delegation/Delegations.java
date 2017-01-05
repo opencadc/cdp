@@ -1,5 +1,6 @@
 package org.astrogrid.security.delegation;
 
+import ca.nrc.cadc.auth.X509CertificateChain;
 import java.io.IOException;
 import java.io.Writer;
 import java.security.GeneralSecurityException;
@@ -60,7 +61,8 @@ public abstract class Delegations
      */
     public String hash(X500Principal principal)
     {
-        return Integer.toString(principal.hashCode());
+        //return Integer.toString(principal.hashCode());
+        return X509CertificateChain.genHashKey(principal);
     }
 
     /**
