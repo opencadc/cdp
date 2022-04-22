@@ -70,8 +70,8 @@
 package org.opencadc.cred;
 
 import ca.nrc.cadc.cred.server.CertificateDAO;
+import ca.nrc.cadc.vosi.Availability;
 import ca.nrc.cadc.vosi.AvailabilityPlugin;
-import ca.nrc.cadc.vosi.AvailabilityStatus;
 
 public class ServiceAvailability implements AvailabilityPlugin {
 
@@ -89,7 +89,7 @@ public class ServiceAvailability implements AvailabilityPlugin {
     }
 
     @Override
-    public AvailabilityStatus getStatus() {
+    public Availability getStatus() {
         boolean isGood = true;
         String note = "service is accepting requests";
         try {
@@ -102,7 +102,7 @@ public class ServiceAvailability implements AvailabilityPlugin {
             isGood = false;
             note = "test failed, reason: " + t;
         }
-        return new AvailabilityStatus(isGood, null, null, null, note);
+        return new Availability(isGood, note);
     }
 
     public void setState(String string) {

@@ -69,19 +69,12 @@
 
 package ca.nrc.cadc.cred.client;
 
-import java.net.URI;
-import java.security.PrivilegedAction;
-import java.security.cert.X509Certificate;
-
-import javax.security.auth.Subject;
-
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-
+import ca.nrc.cadc.auth.AuthMethod;
 import ca.nrc.cadc.auth.CertCmdArgUtil;
 import ca.nrc.cadc.auth.HttpPrincipal;
 import ca.nrc.cadc.auth.X509CertificateChain;
 import ca.nrc.cadc.cred.CertUtil;
+import ca.nrc.cadc.reg.Standards;
 import ca.nrc.cadc.reg.client.RegistryClient;
 import ca.nrc.cadc.util.ArgumentMap;
 import ca.nrc.cadc.util.Log4jInit;
@@ -89,11 +82,18 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.security.Principal;
+import java.security.PrivilegedAction;
+import java.security.cert.X509Certificate;
 import java.util.HashSet;
 import java.util.Set;
+import javax.security.auth.Subject;
 import javax.security.auth.x500.X500Principal;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
 public class Main implements PrivilegedAction<Boolean>
 {
@@ -405,6 +405,7 @@ public class Main implements PrivilegedAction<Boolean>
             URI resourceID = new URI(rid);
             this.client = new CredClient(resourceID);
             logger.info("created: " + client.getClass().getSimpleName() + " for " + resourceID);
+            logger.info("found service: " + client.getServiceBaseURL());
         }
         catch(URISyntaxException ex)
         {

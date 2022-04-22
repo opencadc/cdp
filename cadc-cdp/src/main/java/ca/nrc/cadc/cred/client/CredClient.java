@@ -126,6 +126,7 @@ public class CredClient
     private static Logger LOGGER = Logger.getLogger(CredClient.class);
     
     private URI serviceID;
+    private RegistryClient reg;
     
     public CredClient(URI serviceID)
     {
@@ -136,6 +137,12 @@ public class CredClient
         this.serviceID = serviceID;
     }
 
+    String getServiceBaseURL() {
+        URL u = getRegistryClient().getServiceURL(serviceID, Standards.VOSI_CAPABILITIES, AuthMethod.ANON);
+        String ret = u.toExternalForm().replace("/capabilities", "");
+        return ret;
+    }
+    
     /**
      * Get a proxy certificate for the specified user (subject). This operation is
      * currently a custom feature of the cadcCDP-Server implementation that allows
@@ -894,7 +901,10 @@ public class CredClient
 
     protected RegistryClient getRegistryClient()
     {
-        return new RegistryClient();
+        if (reg == null) {
+            this.reg = new RegistryClient();
+        }
+        return reg;
     }
 
     static byte[] getCSR(byte[] certBuf) throws IOException
