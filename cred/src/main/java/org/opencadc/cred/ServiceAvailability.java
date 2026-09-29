@@ -69,16 +69,23 @@
 
 package org.opencadc.cred;
 
+import ca.nrc.cadc.reg.Standards;
+import ca.nrc.cadc.reg.client.LocalAuthority;
 import ca.nrc.cadc.vosi.Availability;
 import ca.nrc.cadc.vosi.AvailabilityPlugin;
 import ca.nrc.cadc.vosi.avail.CheckCertificate;
 import ca.nrc.cadc.vosi.avail.CheckException;
+import ca.nrc.cadc.vosi.avail.CheckResource;
+import ca.nrc.cadc.vosi.avail.CheckWebService;
 import java.io.File;
+import java.net.URI;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 
 public class ServiceAvailability implements AvailabilityPlugin {
 
+    private static final File AAI_PEM_FILE = new File(System.getProperty("user.home") + "/.ssl/cadcproxy.pem");
+    
     private String appName;
 
     public ServiceAvailability() {
@@ -106,6 +113,23 @@ public class ServiceAvailability implements AvailabilityPlugin {
                 checkCert.check();
             } else {
                 throw new CheckException("Configured signing cert not readable: " + signCertFile.getPath());
+            }
+            
+            LocalAuthority localAuthority = new LocalAuthority();
+            URI usersURI = localAuthority.getResourceID(Standards.UMS_USERS_01);
+            if (usersURI != null) {
+                CheckResource cws = new CheckWebService(usersURI);
+                cws.check();
+            }
+            
+            if (usersURI != null) {
+                if (AAI_PEM_FILE.exists() && AAI_PEM_FILE.canRead()) {
+                    // check for a certificate needed to perform network A&A ops
+                    CheckCertificate checkCert = new CheckCertificate(AAI_PEM_FILE);
+                    checkCert.check();
+                } else {
+                    throw new CheckException("AAI cert not found or unreadable");
+                }
             }
         } catch (CheckException ce) {
             // tests determined that the resource is not working
